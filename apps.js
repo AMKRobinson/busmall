@@ -1,10 +1,22 @@
 'use strict';
 var currentProductArray = [];
 var lastProductArray = [];
-var productNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
+var productNamesJpg = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 var productNamesPng = ['sweep'];
 var productNamesGif = ['usb'];
 var products = [];
+var randomImages = document.getElementById('displayImages');
+
+function product(name, location){
+  this.name = name;
+  this.location = location;
+  this.numTimesShown = 0;
+  this.numTimesClicked = 0;
+  this.id = this.name;
+  // var num = Math.floor(Math.random() * imgArray.length);
+  // console.log(num);
+  // imgArray[num];
+}
 
 function initProductData(productArray, ext){
   var returnArray = [];
@@ -17,36 +29,70 @@ function initProductData(productArray, ext){
   return returnArray;
 }
 
-var bag = new product ('bag', 'img/bag.jpg');
-var banana = new product ('banana', 'img/banana.jpg');
-var bathroom = new product ('bathroom', 'img/bathroom.jpg');
-var boots = new product ('boots', 'img/boots.jpg');
-var breakfast = new product ('breakfast', 'img/breakfast.jpg');
-var bubblegum = new product ('bubblegum', 'img/bubblegum.jpg');
-var chair = new product ('chair', 'img/chair.jpg');
-var cthulhu = new product ('cthulhu', 'img/cthulhu.jpg');
-var dogduck = new product ('dog-duck', 'img/dog-duck.jpg');
-var dragon = new product ('dragon', 'img/dragon.jpg');
-var pen = new product ('pen', 'img/pen.jpg');
-var petsweep = new product ('pet-sweep', 'img/pet-sweep.jpg');
-var scissors = new product ('scissors', 'img/scissors.jpg');
-var shark = new product ('shark', 'img/shark.jpg');
-var tauntaun = new product ('tauntaun', 'img/tauntaun.jpg');
-var unicorn = new product ('unicorn', 'img/unicorn.jpg');
-var watercan = new product ('water-can', 'img/water-can.jpg');
-var wineglass = new product ('wine-glass', 'img/wine-glass.jpg');
+var jpgProducts = initProductData(productNamesJpg, '.jpg');
+var pngProducts = initProductData(productNamesPng, '.png');
+var gifProducts = initProductData(productNamesGif, '.gif');
 
-var sweep = new product ('sweep', 'img/sweep.png');
-var usb = new product ('usb', 'img/usb.gif');
+products = [].concat(jpgProducts, pngProducts, gifProducts);
 
+// \n is the escape character for a newline
+console.log('Products: ', products);
 
-function product(name, location){
-  this.name = name;
-  this.location = location;
-  this.numTimesShown = 0;
-  this.numTimesClicked = 0;
-  this.id = this.name;
-  // var num = Math.floor(Math.random() * imgArray.length);
-  // console.log(num);
-  // imgArray[num];
+function createProductImage(product) {
+  var randomImg = document.createElement('img');
+  randomImg.src = product.location;
+  randomImg.id = product.name;
+  randomImg.width = 300;
+  // randomImg.addEventListener('click', );
+  return randomImg;
+  // randomImages.appendChild(randomImg);
+}
+
+function randomProductIndex () {
+  return Math.floor(Math.random() * products.length);
+}
+
+function getUniqueRandom (previousNumbers) {
+  var newRand = randomProductIndex();
+  var uniqueRandFound = false;
+  while (!uniqueRandFound) {
+    if (previousNumbers.indexOf(newRand) === -1) {
+      uniqueRandFound = true;
+    } else {
+      newRand = randomProductIndex();
+    }
+  }
+  return newRand;
+}
+
+function createProductSet (lastSet) {
+  var numProductsShown = 3;
+  while (randomImages.firstChild) {
+    randomImages.removeChild(randomImages.firstChild);
+  }
+  // console.log(products.length);
+  var usedRandomIndicesForSet = lastSet || [];
+  for (var i = 0; i < numProductsShown; i++) {
+    // console.log('i: ', i);
+    var prodIndex = getUniqueRandom(usedRandomIndicesForSet);
+    // console.log('prodIndex: ', prodIndex);
+    usedRandomIndicesForSet.push(prodIndex);
+    console.log('usedRandomIndicesForSet: ', usedRandomIndicesForSet);
+    var randomProduct = products[prodIndex];
+    randomProduct.numTimesShown++;
+    console.log('product being used: ', randomProduct);
+    var randomProductImage = createProductImage(randomProduct);
+    randomImages.appendChild(randomProductImage);
+  }
+  return usedRandomIndicesForSet;
+}
+
+var lastProductSet = [];
+document.getElementById('newSet').addEventListener('click', handleNewSetClick);
+
+function handleNewSetClick(event) {
+  console.log('event: ', event.target.id);
+  console.log('newSet, lastProductSet: ', lastProductSet);
+  if (lastProductSet.length === 6) lastProductSet = [];
+  lastProductSet = createProductSet(lastProductSet);
 }
