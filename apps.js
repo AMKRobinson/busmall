@@ -43,7 +43,9 @@ function createProductImage(product) {
   randomImg.src = product.location;
   randomImg.id = product.name;
   randomImg.width = 300;
-  // randomImg.addEventListener('click', );
+  randomImg.addEventListener('click', function (event){
+    console.log('imageclick: ', event.target.id);
+  });
   return randomImg;
   // randomImages.appendChild(randomImg);
 }
