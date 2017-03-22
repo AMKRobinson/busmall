@@ -1,5 +1,6 @@
 'use strict';
 
+var nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
 var productNamesJpg = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 var productNamesPng = ['sweep'];
 var productNamesGif = ['usb'];
@@ -101,7 +102,6 @@ var lastProductSet = [];
 function handleImageClick(event) {
   totalClicks++;
   var clickedImageName = this.alt; // or event.target.alt
-  console.log('Image clicked: ', clickedImageName);
   var clickedImageIndex = getIndexFromProductName(clickedImageName);
   products[clickedImageIndex].numTimesClicked++;
   if (totalClicks === clickLimit) {
@@ -115,26 +115,63 @@ img1.addEventListener('click', handleImageClick);
 img2.addEventListener('click', handleImageClick);
 img3.addEventListener('click', handleImageClick);
 
+var voteTotals = [];
 function displayResults() {
-  console.log('results');
   img1.removeEventListener('click', handleImageClick);
   img2.removeEventListener('click', handleImageClick);
   img3.removeEventListener('click', handleImageClick);
-  var content = document.getElementById('displayImages');
-  var ul = document.createElement('ul');
-  content.innerHTML = '';
-  var title = document.createElement('h1');
-  title.innerText = 'Results';
-  content.appendChild(title);
-  content.appendChild(ul);
-  var list = [];
+  // var content = document.getElementById('displayImages');
+  // var ul = document.createElement('ul');
+  // // content.innerHTML = '';
+  // var title = document.createElement('h1');
+  // title.innerText = 'Results';
+  // content.appendChild(title);
+  // content.appendChild(ul);
+  // // var list = [];
+  // for (var i = 0; i < products.length; i++) {
+  //   var li = document.createElement('li');
+  //   var textContent = products[i].numTimesClicked + ' votes for ' + products[i].name;
+  //   li.innerText = textContent;
+  //   ul.appendChild(li);
+  productClicks();
+  // }
   for (var i = 0; i < products.length; i++) {
-    var li = document.createElement('li');
-    var textContent = products[i].numTimesClicked + ' votes for ' + products[i].name;
-    li.innerText = textContent;
-    ul.appendChild(li);
+    voteTotals.push(products[i].numTimesClicked);
   }
 }
 
+var voteTotals = [];
+function productClicks() {
+  for (var i = 0; i < products.length; i++) {
+    voteTotals.push(products[i].numTimesClicked);
+  }
+
+  var canvas = document.getElementById('chart');
+  var ctx = canvas.getContext('2d');
+
+  var data = {
+    labels: nameArray,
+    datasets: [{
+      label: 'Product Name',
+      data: voteTotals,
+      backgroundColor: 'orange'
+    }]
+  };
+
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero:true
+          }
+        }]
+      }
+    }
+  });
+  localStorage['voteTotals'] = JSON.stringify(voteTotals);
+}
 var currentlyDisplayedProducts = createUniqueProductSet(lastProductSetIndices);
 setProductImages(currentlyDisplayedProducts);
