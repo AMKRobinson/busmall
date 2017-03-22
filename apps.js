@@ -1,21 +1,16 @@
 'use strict';
-var currentProductArray = [];
-var lastProductArray = [];
+
 var productNamesJpg = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 var productNamesPng = ['sweep'];
 var productNamesGif = ['usb'];
 var products = [];
-var randomImages = document.getElementById('displayImages');
+var totalClicks = 0;
 
-function product(name, location){
+function Product(name, location){
   this.name = name;
   this.location = location;
   this.numTimesShown = 0;
   this.numTimesClicked = 0;
-  this.id = this.name;
-  // var num = Math.floor(Math.random() * imgArray.length);
-  // console.log(num);
-  // imgArray[num];
 }
 
 function initProductData(productArray, ext){
@@ -23,7 +18,7 @@ function initProductData(productArray, ext){
   for (var i = 0; i < productArray.length; i++) {
     var productName = productArray[i];
     var filePath = 'img/' + productName + ext;
-    var temp = new product (productName, filePath);
+    var temp = new Product(productName, filePath);
     returnArray.push(temp);
   }
   return returnArray;
@@ -32,23 +27,9 @@ function initProductData(productArray, ext){
 var jpgProducts = initProductData(productNamesJpg, '.jpg');
 var pngProducts = initProductData(productNamesPng, '.png');
 var gifProducts = initProductData(productNamesGif, '.gif');
-
 products = [].concat(jpgProducts, pngProducts, gifProducts);
 
-// \n is the escape character for a newline
-console.log('Products: ', products);
-
-function createProductImage(product) {
-  var randomImg = document.createElement('img');
-  randomImg.src = product.location;
-  randomImg.id = product.name;
-  randomImg.width = 300;
-  randomImg.addEventListener('click', function (event){
-    console.log('imageclick: ', event.target.id);
-  });
-  return randomImg;
-  // randomImages.appendChild(randomImg);
-}
+var randomImages = document.getElementById('displayImages');
 
 function randomProductIndex () {
   return Math.floor(Math.random() * products.length);
@@ -67,34 +48,109 @@ function getUniqueRandom (previousNumbers) {
   return newRand;
 }
 
-function createProductSet (lastSet) {
+var img1 = document.getElementById('left');
+var img2 = document.getElementById('center');
+var img3 = document.getElementById('right');
+
+var lastProductSetIndices = [];
+function createUniqueProductSet(lastSet) {
   var numProductsShown = 3;
-  while (randomImages.firstChild) {
-    randomImages.removeChild(randomImages.firstChild);
-  }
-  // console.log(products.length);
-  var usedRandomIndicesForSet = lastSet || [];
+  var uniqueProductSetArray = [];
+  var lastIndicesForSet = lastSet;
+  var currentProductIndices = [];
   for (var i = 0; i < numProductsShown; i++) {
-    // console.log('i: ', i);
-    var prodIndex = getUniqueRandom(usedRandomIndicesForSet);
-    // console.log('prodIndex: ', prodIndex);
-    usedRandomIndicesForSet.push(prodIndex);
-    console.log('usedRandomIndicesForSet: ', usedRandomIndicesForSet);
-    var randomProduct = products[prodIndex];
-    randomProduct.numTimesShown++;
-    console.log('product being used: ', randomProduct);
-    var randomProductImage = createProductImage(randomProduct);
-    randomImages.appendChild(randomProductImage);
+    var currentandLastProductIndices = [].concat(currentProductIndices, lastIndicesForSet);
+    var productIndex = getUniqueRandom(currentandLastProductIndices);
+    currentProductIndices.push(productIndex);
+    // pulls unique prduct from products array.
+    var uniqueProduct = products[productIndex];
+    uniqueProduct.numTimesShown++;
+    uniqueProductSetArray.push(uniqueProduct);
   }
-  return usedRandomIndicesForSet;
+  lastProductSetIndices = currentProductIndices;
+  return uniqueProductSetArray;
 }
 
+var clickLimit = 25;
+function setProductImages(productSet) {
+  img1.src = productSet[0].location;
+  img2.src = productSet[1].location;
+  img3.src = productSet[2].location;
+
+  img1.alt = productSet[0].name;
+  img2.alt = productSet[1].name;
+  img3.alt = productSet[2].name;
+
+  img1.width = 250;
+  img2.width = 250;
+  img3.width = 250;
+}
+
+function getIndexFromProductName(productName) {
+  var index = -1;
+  for (var i = 0; i < products.length; i++) {
+    if (productName === products[i].name) {
+      index = i;
+    }
+  }
+  return index;
+}
+
+var totalClicks = 0;
 var lastProductSet = [];
-document.getElementById('newSet').addEventListener('click', handleNewSetClick);
-
-function handleNewSetClick(event) {
-  console.log('event: ', event.target.id);
-  console.log('newSet, lastProductSet: ', lastProductSet);
-  if (lastProductSet.length === 6) lastProductSet = [];
-  lastProductSet = createProductSet(lastProductSet);
+function handleImageClick(event) {
+  totalClicks++;
+  var clickedImageName = this.alt; // or event.target.alt
+  console.log('Image clicked: ', clickedImageName);
+  var clickedImageIndex = getIndexFromProductName(clickedImageName);
+  products[clickedImageIndex].numTimesClicked++;
+  if (totalClicks === clickLimit) {
+    return displayResults();
+  }
+  var currentlyDisplayedProducts = createUniqueProductSet(lastProductSetIndices);
+  setProductImages(currentlyDisplayedProducts);
 }
+
+img1.addEventListener('click', handleImageClick);
+img2.addEventListener('click', handleImageClick);
+img3.addEventListener('click', handleImageClick);
+
+function displayResults() {
+  console.log('results');
+  img1.removeEventListener('click', handleImageClick);
+  img2.removeEventListener('click', handleImageClick);
+  img3.removeEventListener('click', handleImageClick);
+  var content = document.getElementById('displayImages');
+  var ul = document.createElement('ul');
+  content.innerHTML = '';
+  var title = document.createElement('h1');
+  title.innerText = 'Results';
+  content.appendChild(title);
+  content.appendChild(ul);
+  var list = [];
+  for (var i = 0; i < products.length; i++) {
+    var li = document.createElement('li');
+    var textContent = products[i].numTimesClicked + ' votes for ' + products[i].name;
+    li.innerText = textContent;
+    ul.appendChild(li);
+  }
+}
+
+var content = document.getElementById('displayImages');
+var startButton = document.createElement('button');
+startButton.innerText = 'Start Product Research';
+startButton.id = 'startButton';
+startButton.addEventListener('click', init);
+content.appendChild(startButton);
+
+function init() {
+  var startButton = document.getElementById('startButton');
+  content.removeChild(startButton);
+
+  var currentlyDisplayedProducts = createUniqueProductSet(lastProductSetIndices);
+  setProductImages(currentlyDisplayedProducts);
+}
+// var barChart = new Chart();
+
+// var filepathArray = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
+// var productNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
