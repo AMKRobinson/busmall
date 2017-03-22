@@ -136,21 +136,5 @@ function displayResults() {
   }
 }
 
-var content = document.getElementById('displayImages');
-var startButton = document.createElement('button');
-startButton.innerText = 'Start Product Research';
-startButton.id = 'startButton';
-startButton.addEventListener('click', init);
-content.appendChild(startButton);
-
-function init() {
-  var startButton = document.getElementById('startButton');
-  content.removeChild(startButton);
-
-  var currentlyDisplayedProducts = createUniqueProductSet(lastProductSetIndices);
-  setProductImages(currentlyDisplayedProducts);
-}
-// var barChart = new Chart();
-
-// var filepathArray = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
-// var productNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
+var currentlyDisplayedProducts = createUniqueProductSet(lastProductSetIndices);
+setProductImages(currentlyDisplayedProducts);
