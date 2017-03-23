@@ -1,6 +1,6 @@
 'use strict';
 
-var nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
+var nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass' , 'sweep', 'usb'];
 var productNamesJpg = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 var productNamesPng = ['sweep'];
 var productNamesGif = ['usb'];
@@ -108,7 +108,6 @@ var totalClicks = 0;
 var lastProductSet = [];
 function handleImageClick(event) {
   totalClicks++;
-  localStorage.productInfo = JSON.stringify(products);
   var clickedImageName = this.alt; // or event.target.alt
   var clickedImageIndex = getIndexFromProductName(clickedImageName);
   products[clickedImageIndex].numTimesClicked++;
@@ -117,6 +116,7 @@ function handleImageClick(event) {
   }
   var currentlyDisplayedProducts = createUniqueProductSet(lastProductSetIndices);
   setProductImages(currentlyDisplayedProducts);
+  localStorage.productInfo = JSON.stringify(products);
 }
 
 img1.addEventListener('click', handleImageClick);
