@@ -103,7 +103,7 @@ if (localStorage.productInfo) {
   }
 }
 
-var clickLimit = 5;
+var clickLimit = 25;
 var totalClicks = 0;
 var lastProductSet = [];
 function handleImageClick(event) {
@@ -127,6 +127,7 @@ function displayResults() {
   img1.removeEventListener('click', handleImageClick);
   img2.removeEventListener('click', handleImageClick);
   img3.removeEventListener('click', handleImageClick);
+  alert('You\'ve reached the click limit!');
   productClicks();
   for (var i = 0; i < products.length; i++) {
     voteTotals.push(products[i].numTimesClicked);

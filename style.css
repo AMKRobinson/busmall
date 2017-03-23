@@ -1,3 +1,81 @@
+body {
+  margin: 2%;
+  background-color: #E5DFFF;
+}
+
+#title {
+  margin-top: 57px;
+}
+
+header {
+  display: block;
+  margin: auto;
+  margin-bottom: 25px;
+  width: 700px;
+  height: 250px;
+  padding: 5px;
+  text-align: center;
+}
+
 .image {
+  /*float:left;*/
+  display: inline;
+}
+
+#left {
+  height: 300px;
+  width: 300px;
+  margin: 5px;
+  border-style: solid;
+  border-color: gray;
+}
+
+#center {
+  height: 300px;
+  width: 300px;
+  margin: 5px;
+  border-style: solid;
+  border-color: gray;
+}
+
+#right {
+  height: 300px;
+  width: 300px;
+  margin: 5px;
+  border-style: solid;
+  border-color: gray;
+}
+
+#busIcon {
   float: left;
+  padding: 20px;
+  /*background-color: black;
+  border-style: solid;
+  border-color: gray;
+  border-radius: 140px;*/
+}
+
+h1 {
+    font-family: 'Geo', sans-serif;
+    font-size: 125px;
+    display: inline;
+    color: gray;
+    text-shadow: 2px 2px 2px #000000;
+}
+
+
+#imagesSection {
+  display: block;
+  margin: auto;
+  width: 960px;
+  height: 320px;
+  padding: 5px;
+  background: repeating-radial-gradient(
+  circle,
+  purple,
+  purple 10px,
+  #4b026f 10px,
+  #4b026f 20px
+);
+border-radius: 10px;
 }
