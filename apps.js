@@ -7,6 +7,10 @@ var productNamesGif = ['usb'];
 var products = [];
 var totalClicks = 0;
 
+var img1 = document.getElementById('left');
+var img2 = document.getElementById('center');
+var img3 = document.getElementById('right');
+
 function Product(name, location){
   this.name = name;
   this.location = location;
@@ -48,10 +52,6 @@ function getUniqueRandom (previousNumbers) {
   }
   return newRand;
 }
-
-var img1 = document.getElementById('left');
-var img2 = document.getElementById('center');
-var img3 = document.getElementById('right');
 
 var lastProductSetIndices = [];
 function createUniqueProductSet(lastSet) {
@@ -96,8 +96,8 @@ function getIndexFromProductName(productName) {
   return index;
 }
 
-if (localStorage.whatever) {
-  var storageArray = JSON.parse(localStorage.whatever);
+if (localStorage.productInfo) {
+  var storageArray = JSON.parse(localStorage.productInfo);
   for (var i = 0; i < storageArray.length; i++) {
     products[i].numTimesClicked += storageArray[i].numTimesClicked;
   }
@@ -108,7 +108,7 @@ var totalClicks = 0;
 var lastProductSet = [];
 function handleImageClick(event) {
   totalClicks++;
-  localStorage.whatever = JSON.stringify(products);
+  localStorage.productInfo = JSON.stringify(products);
   var clickedImageName = this.alt; // or event.target.alt
   var clickedImageIndex = getIndexFromProductName(clickedImageName);
   products[clickedImageIndex].numTimesClicked++;
@@ -123,7 +123,6 @@ img1.addEventListener('click', handleImageClick);
 img2.addEventListener('click', handleImageClick);
 img3.addEventListener('click', handleImageClick);
 
-var voteTotals = [];
 function displayResults() {
   img1.removeEventListener('click', handleImageClick);
   img2.removeEventListener('click', handleImageClick);
