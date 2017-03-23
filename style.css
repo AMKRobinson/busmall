@@ -11,14 +11,13 @@ header {
   display: block;
   margin: auto;
   margin-bottom: 25px;
-  width: 700px;
+  width: 810px;
   height: 250px;
   padding: 5px;
   text-align: center;
 }
 
 .image {
-  /*float:left;*/
   display: inline;
 }
 
@@ -46,21 +45,36 @@ header {
   border-color: gray;
 }
 
+#busDriver {
+  float: left;
+  margin-top: 100px;
+}
+
 #busIcon {
   float: left;
   padding: 20px;
-  /*background-color: black;
-  border-style: solid;
-  border-color: gray;
-  border-radius: 140px;*/
+}
+
+.busIcon:hover {
+  -webkit-transform: rotate(360deg);
+  -webkit-transition: -webkit-transform .5s;
 }
 
 h1 {
     font-family: 'Geo', sans-serif;
     font-size: 125px;
     display: inline;
-    color: gray;
-    text-shadow: 2px 2px 2px #000000;
+    color: black;
+    text-shadow: 2px 2px 2px white;
+    margin-right: 30px;
+}
+
+h2 {
+  font-family: 'Geo', sans-serif;
+  font-size: 15px;
+  /*display: inline;*/
+  color: black;
+  margin-right: 30px;
 }
 
 
