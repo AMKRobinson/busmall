@@ -72,12 +72,11 @@ function createUniqueProductSet(lastSet) {
   return uniqueProductSetArray;
 }
 
-var clickLimit = 25;
 function setProductImages(productSet) {
   img1.src = productSet[0].location;
   img2.src = productSet[1].location;
   img3.src = productSet[2].location;
-
+  console.log(productSet);
   img1.alt = productSet[0].name;
   img2.alt = productSet[1].name;
   img3.alt = productSet[2].name;
@@ -97,10 +96,19 @@ function getIndexFromProductName(productName) {
   return index;
 }
 
+if (localStorage.whatever) {
+  var storageArray = JSON.parse(localStorage.whatever);
+  for (var i = 0; i < storageArray.length; i++) {
+    products[i].numTimesClicked += storageArray[i].numTimesClicked;
+  }
+}
+
+var clickLimit = 5;
 var totalClicks = 0;
 var lastProductSet = [];
 function handleImageClick(event) {
   totalClicks++;
+  localStorage.whatever = JSON.stringify(products);
   var clickedImageName = this.alt; // or event.target.alt
   var clickedImageIndex = getIndexFromProductName(clickedImageName);
   products[clickedImageIndex].numTimesClicked++;
@@ -120,21 +128,7 @@ function displayResults() {
   img1.removeEventListener('click', handleImageClick);
   img2.removeEventListener('click', handleImageClick);
   img3.removeEventListener('click', handleImageClick);
-  // var content = document.getElementById('displayImages');
-  // var ul = document.createElement('ul');
-  // // content.innerHTML = '';
-  // var title = document.createElement('h1');
-  // title.innerText = 'Results';
-  // content.appendChild(title);
-  // content.appendChild(ul);
-  // // var list = [];
-  // for (var i = 0; i < products.length; i++) {
-  //   var li = document.createElement('li');
-  //   var textContent = products[i].numTimesClicked + ' votes for ' + products[i].name;
-  //   li.innerText = textContent;
-  //   ul.appendChild(li);
   productClicks();
-  // }
   for (var i = 0; i < products.length; i++) {
     voteTotals.push(products[i].numTimesClicked);
   }
@@ -171,7 +165,6 @@ function productClicks() {
       }
     }
   });
-  localStorage['voteTotals'] = JSON.stringify(voteTotals);
 }
 var currentlyDisplayedProducts = createUniqueProductSet(lastProductSetIndices);
 setProductImages(currentlyDisplayedProducts);
