@@ -5,7 +5,19 @@ var productNamesJpg = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubbl
 var productNamesPng = ['sweep'];
 var productNamesGif = ['usb'];
 var products = [];
+var timesShownArray = [];
+var voteTotals = [];
+var clickLimit = 25;
+var lastProductSet = [];
 var totalClicks = 0;
+var lastProductSetIndices = [];
+var jpgProducts = initProductData(productNamesJpg, '.jpg');
+var pngProducts = initProductData(productNamesPng, '.png');
+var gifProducts = initProductData(productNamesGif, '.gif');
+products = [].concat(jpgProducts, pngProducts, gifProducts);
+var randomImages = document.getElementById('displayImages');
+var canvas = document.getElementById('chart');
+var ctx = canvas.getContext('2d');
 
 var img1 = document.getElementById('left');
 var img2 = document.getElementById('center');
@@ -29,13 +41,6 @@ function initProductData(productArray, ext){
   return returnArray;
 }
 
-var jpgProducts = initProductData(productNamesJpg, '.jpg');
-var pngProducts = initProductData(productNamesPng, '.png');
-var gifProducts = initProductData(productNamesGif, '.gif');
-products = [].concat(jpgProducts, pngProducts, gifProducts);
-
-var randomImages = document.getElementById('displayImages');
-
 function randomProductIndex () {
   return Math.floor(Math.random() * products.length);
 }
@@ -53,7 +58,6 @@ function getUniqueRandom (previousNumbers) {
   return newRand;
 }
 
-var lastProductSetIndices = [];
 function createUniqueProductSet(lastSet) {
   var numProductsShown = 3;
   var uniqueProductSetArray = [];
@@ -76,11 +80,9 @@ function setProductImages(productSet) {
   img1.src = productSet[0].location;
   img2.src = productSet[1].location;
   img3.src = productSet[2].location;
-  console.log(productSet);
   img1.alt = productSet[0].name;
   img2.alt = productSet[1].name;
   img3.alt = productSet[2].name;
-
   img1.width = 250;
   img2.width = 250;
   img3.width = 250;
@@ -100,12 +102,10 @@ if (localStorage.productInfo) {
   var storageArray = JSON.parse(localStorage.productInfo);
   for (var i = 0; i < storageArray.length; i++) {
     products[i].numTimesClicked += storageArray[i].numTimesClicked;
+    products[i].numTimesShown += storageArray[i].numTimesShown;
   }
 }
 
-var clickLimit = 25;
-var totalClicks = 0;
-var lastProductSet = [];
 function handleImageClick(event) {
   totalClicks++;
   var clickedImageName = this.alt; // or event.target.alt
@@ -128,27 +128,27 @@ function displayResults() {
   img2.removeEventListener('click', handleImageClick);
   img3.removeEventListener('click', handleImageClick);
   alert('You\'ve reached the click limit!');
-  productClicks();
+  // productClicks();
   for (var i = 0; i < products.length; i++) {
     voteTotals.push(products[i].numTimesClicked);
   }
+  for (var i = 0; i < products.length; i++) {
+    timesShownArray.push(products[i].numTimesShown);
+  }
+  renderChart();
 }
 
-var voteTotals = [];
-function productClicks() {
-  for (var i = 0; i < products.length; i++) {
-    voteTotals.push(products[i].numTimesClicked);
-  }
-
-  var canvas = document.getElementById('chart');
-  var ctx = canvas.getContext('2d');
-
+function renderChart() {
   var data = {
     labels: nameArray,
     datasets: [{
-      label: 'Product Name',
+      label: 'Times Clicked',
       data: voteTotals,
-      backgroundColor: 'orange'
+      backgroundColor: 'black'
+    }, {
+      label: 'Times Shown',
+      data: timesShownArray,
+      backgroundColor: 'gray',
     }]
   };
 
@@ -166,5 +166,6 @@ function productClicks() {
     }
   });
 }
+
 var currentlyDisplayedProducts = createUniqueProductSet(lastProductSetIndices);
 setProductImages(currentlyDisplayedProducts);
