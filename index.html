@@ -3,14 +3,37 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel='stylesheet' href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
+    <script src="https://use.fontawesome.com/d2e7b587eb.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Geo" rel="stylesheet">
+    <link type="text/css" rel='stylesheet' href="style.css">
   </head>
   <body>
-    <section id="displayImages">
+    <header>
+      <div id="busDriver"><h2>Click the images!</h2><img src = "BusDriver.gif"></img></div>
+      <div id="busIcon"><img src = "CityBusFront.gif" width="150" height="150" class="busIcon"></img></div>
+      </div>
+      <div id="title"><h1>Bus-mall<h1/>
+      </div>
+    </header>
+    <section id="statement"><h3>    Welcome to Buss Mall! We want to bring interesting new products to our riders. To help us give you the best
+      Buss Mall catalogue please click on one of the the three products below that interest you the most! Once you finish our
+      25 round survey you will see the total results from all of our participants at the bottom of the page. Thank you!</h3></section>
+    <section id='gradient'><section>
+    <section id="imagesSection">
       <div class="image"><img src="" alt="" id="left"/></div>
       <div class="image"><img src="" alt="" id="center"/></div>
       <div class="image"><img src="" alt="" id="right"/></div>
+      <canvas id="myChart" width="400" height="400"></canvas>
     </section>
+  </div>
+  <div>
+  <style media="screen">
+     canvas {
+     }
+  </style>
+  <canvas height="300" id="chart" width="500"></canvas>
   <script src="apps.js"></script>
+  </div>
   </body>
 </html>
